@@ -595,6 +595,7 @@ h3 {
     transform: rotate(-90deg);
 }
 
+
 @media (max-width: 768px) {
     .container {
         padding: 15px;
