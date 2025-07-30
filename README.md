@@ -98,14 +98,6 @@ The web controller (`tcp_controller.html`) provides:
 - Modern web browser with JavaScript support
 - Embody application with TCP listener enabled
 
-### Command Format
-Commands follow the pattern: `CATEGORY.VALUE` or `PARAMETER.FLOAT_VALUE`
-
-Examples:
-- Character: `PRS.Fem`, `OF.Kimono`, `HS.Buzz`
-- Morphs: `MTHT.0.5`, `MTNW.-0.3`, `MTCL.1.0`
-- Camera: `CAMSHOT.Close`, `View.Mobile`
-
 ## 🎯 Use Cases
 
 - **Content Creation**: Streamlined character setup for video/streaming
