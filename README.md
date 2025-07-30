@@ -66,7 +66,7 @@ You can find the download here:
 ```bash
 # Start the HTTP-to-TCP bridge
 python http_tcp_bridge.py
-# Bridge runs on http://127.0.0.1:7777
+# Bridge runs on http://127.0.0.1:8080
 ```
 
 ### 3. Web Interface Setup
