@@ -59,6 +59,7 @@ TCP_Test_Script/
 
 ### 1. Start the Embody Application
 Ensure your Embody application is running and listening on TCP port 7777.
+
 You can find the download here: 
 
 ### 2. Basic Command Line Usage
