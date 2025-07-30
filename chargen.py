@@ -50,7 +50,7 @@ while True:
     send(hair)
 
     # Skin Color (0.3 – 2.0)
-    skc = round(random.uniform(0.2, 5.0), 3)
+    skc = round(random.uniform(0.2, 1.2), 3)
     send(f"SKC.{skc}")
 
     # Eye Color (EC) and Saturation (ES)
@@ -61,7 +61,7 @@ while True:
     # Morph Targets (subtle + clamped for MTH and MTEP)
     for key in morph_keys:
         if key == "MTH":  # Horns
-            val = round(random.uniform(0.0, 0.5), 3)
+            val = round(random.uniform(0.0, 0.0), 3)
         elif key == "MTEP":  # Ear Point
             val = round(random.uniform(0.0, 0.5), 3)
         else:

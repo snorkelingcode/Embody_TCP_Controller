@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embody External Controller</title>
+    <link rel="stylesheet" href="controller.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Embody</h1>
+        
+        <!-- Connection Settings -->
+        <div class="section">
+            <h2>Connection</h2>
+            <div class="connection-controls">
+                <input type="text" id="host" placeholder="Host" value="127.0.0.1">
+                <input type="number" id="port" placeholder="TCP Port" value="7777">
+                <input type="number" id="httpPort" placeholder="Bridge Port" value="8080">
+                <button id="connect">Connect</button>
+                <button id="disconnect">Disconnect</button>
+                <span id="status">Disconnected</span>
+            </div>
+        </div>
+
+        <!-- Camera System -->
+        <div class="section">
+            <h2>Camera System</h2>
+            <div class="controls-grid">
+                <button onclick="sendCommand('View.Desktop')">Desktop View</button>
+                <button onclick="sendCommand('View.Mobile')">Mobile View</button>
+            </div>
+            <h3>Camera Shots</h3>
+            <div class="controls-grid">
+                <button onclick="sendCommand('CAMSHOT.Default')">Default</button>
+                <button onclick="sendCommand('CAMSHOT.ExtremeClose')">Extreme Close</button>
+                <button onclick="sendCommand('CAMSHOT.Close')">Close</button>
+                <button onclick="sendCommand('CAMSHOT.HighAngle')">High Angle</button>
+                <button onclick="sendCommand('CAMSHOT.LowAngle')">Low Angle</button>
+                <button onclick="sendCommand('CAMSHOT.Medium')">Medium</button>
+                <button onclick="sendCommand('CAMSHOT.MobileMedium')">Mobile Medium</button>
+                <button onclick="sendCommand('CAMSHOT.WideShot')">Wide Shot</button>
+                <button onclick="sendCommand('CAMSHOT.MobileWideShot')">Mobile Wide</button>
+            </div>
+            
+            <h3>Camera Controller (Sliders)</h3>
+            <div class="slider-controls">
+                <div class="camera-sliders">
+                    <h4>Position (XYZ)</h4>
+                    <div class="slider-group">
+                        <label for="positionX">X (Forward/Back):</label>
+                        <input type="range" id="positionX" min="-1000" max="1000" step="0.001" value="0">
+                        <span id="positionXValue">0.000</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="positionY">Y (Left/Right):</label>
+                        <input type="range" id="positionY" min="-1000" max="1000" step="0.001" value="0">
+                        <span id="positionYValue">0.000</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="positionZ">Z (Up/Down):</label>
+                        <input type="range" id="positionZ" min="-1000" max="1000" step="0.001" value="0">
+                        <span id="positionZValue">0.000</span>
+                    </div>
+                </div>
+                
+                <div class="camera-sliders">
+                    <h4>Rotation (Pitch/Yaw/Roll)</h4>
+                    <div class="slider-group">
+                        <label for="rotationRX">RX (Pitch):</label>
+                        <input type="range" id="rotationRX" min="-180" max="180" step="0.001" value="0">
+                        <span id="rotationRXValue">0.000</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="rotationRY">RY (Yaw):</label>
+                        <input type="range" id="rotationRY" min="-180" max="180" step="0.001" value="0">
+                        <span id="rotationRYValue">0.000</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="rotationRZ">RZ (Roll):</label>
+                        <input type="range" id="rotationRZ" min="-180" max="180" step="0.001" value="0">
+                        <span id="rotationRZValue">0.000</span>
+                    </div>
+                </div>
+            </div>
+                
+                <div class="camera-controls">
+                    <div class="control-settings">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="continuousUpdate" checked>
+                            Continuous Update (Real-time)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="smoothMovement" checked>
+                            Smooth Movement
+                        </label>
+                        <div class="speed-control">
+                            <label>Movement Speed:</label>
+                            <input type="range" id="movementSpeed" min="0.1" max="5.0" step="0.1" value="1.0">
+                            <span id="movementSpeedValue">1.0</span>
+                        </div>
+                        <div class="speed-control">
+                            <label>Rotation Speed:</label>
+                            <input type="range" id="rotationSpeed" min="0.1" max="5.0" step="0.1" value="1.0">
+                            <span id="rotationSpeedValue">1.0</span>
+                        </div>
+                        <div class="speed-control">
+                            <label>Update Rate (FPS):</label>
+                            <input type="range" id="updateRate" min="20" max="120" step="10" value="60">
+                            <span id="updateRateValue">60</span>
+                        </div>
+                    </div>
+                    
+                    <div class="manual-input">
+                        <h4>Manual Input</h4>
+                        <div class="input-group">
+                            <input type="number" id="manualX" step="0.001" value="0" placeholder="X">
+                            <input type="number" id="manualY" step="0.001" value="0" placeholder="Y">
+                            <input type="number" id="manualZ" step="0.001" value="0" placeholder="Z">
+                            <input type="number" id="manualRX" step="0.001" value="0" placeholder="RX">
+                            <input type="number" id="manualRY" step="0.001" value="0" placeholder="RY">
+                            <input type="number" id="manualRZ" step="0.001" value="0" placeholder="RZ">
+                            <button onclick="sendManualCamera()">Send Manual</button>
+                        </div>
+                    </div>
+                    
+                    <div class="camera-buttons">
+                        <button onclick="resetCameraPosition()">Reset Position</button>
+                        <button onclick="centerJoysticks()">Center Joysticks</button>
+                    </div>
+                </div>
+                <div class="agent-sliders">
+                    <h4>Agent Position (XYZ)</h4>
+                    <div class="slider-group">
+                        <label for="agentX">X (Forward/Back):</label>
+                        <input type="range" id="agentX" min="-1000" max="1000" step="0.001" value="0">
+                        <span id="agentXValue">0.000</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="agentY">Y (Left/Right):</label>
+                        <input type="range" id="agentY" min="-1000" max="1000" step="0.001" value="0">
+                        <span id="agentYValue">0.000</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="agentZ">Z (Up/Down):</label>
+                        <input type="range" id="agentZ" min="-1000" max="1000" step="0.001" value="0">
+                        <span id="agentZValue">0.000</span>
+                    </div>
+                </div>
+                
+                <div class="agent-sliders">
+                    <h4>Agent Rotation (Pitch/Yaw/Roll)</h4>
+                    <div class="slider-group">
+                        <label for="agentRX">RX (Pitch):</label>
+                        <input type="range" id="agentRX" min="-180" max="180" step="0.001" value="0">
+                        <span id="agentRXValue">0.000</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="agentRY">RY (Yaw):</label>
+                        <input type="range" id="agentRY" min="-180" max="180" step="0.001" value="0">
+                        <span id="agentRYValue">0.000</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="agentRZ">RZ (Roll):</label>
+                        <input type="range" id="agentRZ" min="-180" max="180" step="0.001" value="0">
+                        <span id="agentRZValue">0.000</span>
+                    </div>
+                </div>
+                
+                <div class="agent-controls">
+                    <div class="control-settings">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="agentContinuousUpdate" checked>
+                            Continuous Update (Real-time)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="agentSmoothMovement" checked>
+                            Smooth Movement
+                        </label>
+                        <div class="speed-control">
+                            <label>Agent Movement Speed:</label>
+                            <input type="range" id="agentMovementSpeed" min="0.1" max="5.0" step="0.1" value="1.0">
+                            <span id="agentMovementSpeedValue">1.0</span>
+                        </div>
+                        <div class="speed-control">
+                            <label>Agent Rotation Speed:</label>
+                            <input type="range" id="agentRotationSpeed" min="0.1" max="5.0" step="0.1" value="1.0">
+                            <span id="agentRotationSpeedValue">1.0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="manual-input">
+                        <h4>Manual Agent Input</h4>
+                        <div class="input-group">
+                            <input type="number" id="manualAgentX" step="0.001" value="0" placeholder="X">
+                            <input type="number" id="manualAgentY" step="0.001" value="0" placeholder="Y">
+                            <input type="number" id="manualAgentZ" step="0.001" value="0" placeholder="Z">
+                            <input type="number" id="manualAgentRX" step="0.001" value="0" placeholder="RX">
+                            <input type="number" id="manualAgentRY" step="0.001" value="0" placeholder="RY">
+                            <input type="number" id="manualAgentRZ" step="0.001" value="0" placeholder="RZ">
+                            <button onclick="sendManualAgent()">Send Manual Agent</button>
+                        </div>
+                    </div>
+                    
+                    <div class="agent-buttons">
+                        <button onclick="resetAgentPosition()">Reset Agent Position</button>
+                        <button onclick="sendCamLoc()">Send CamLoc</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Load/Save System -->
+        <div class="section">
+            <h2>Load/Save System</h2>
+            <div class="controls-grid">
+                <button onclick="sendCommand('NEW.Character')">New Character</button>
+                <div class="input-group">
+                    <input type="text" id="characterName" placeholder="Character Name" value="Lucy">
+                    <button onclick="sendNameCommand()">Set Name</button>
+                </div>
+                <button onclick="sendCommand('BTN.Save')">Save</button>
+                <div class="input-group">
+                    <input type="text" id="loadName" placeholder="Load Name" value="Lucy">
+                    <button onclick="sendLoadCommand()">Load</button>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="deleteName" placeholder="Delete Name" value="Lucy">
+                    <button onclick="sendDeleteCommand()">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Presets -->
+        <div class="section">
+            <h2>Presets</h2>
+            <div class="controls-grid">
+                <button onclick="sendCommand('PRS.Masc')">Masculine A</button>
+                <button onclick="sendCommand('PRS.Masc1')">Masculine B</button>
+                <button onclick="sendCommand('PRS.Fem')">Feminine A</button>
+                <button onclick="sendCommand('PRS.Fem1')">Feminine B</button>
+            </div>
+        </div>
+
+        <!-- Outfits -->
+        <div class="section">
+            <h2>Outfits</h2>
+            <div class="controls-grid">
+                <button onclick="sendCommand('OF.Default')">Default</button>
+                <button onclick="sendCommand('OF.MaidDress')">Maid Dress</button>
+                <button onclick="sendCommand('OF.PopStar')">Pop Star</button>
+                <button onclick="sendCommand('OF.Kimono')">Kimono</button>
+                <button onclick="sendCommand('OF.BlackDress')">Black Dress</button>
+                <button onclick="sendCommand('OF.SpaceSuit')">Space Suit</button>
+                <button onclick="sendCommand('OF.ANIME')">Anime Armor</button>
+            </div>
+        </div>
+
+        <!-- Hair Styles -->
+        <div class="section">
+            <h2>Hair Styles</h2>
+            <div class="controls-grid">
+                <button onclick="sendCommand('HS.Default')">Default</button>
+                <button onclick="sendCommand('HS.Buzz')">Buzz Cut</button>
+                <button onclick="sendCommand('HS.Crop')">Crop</button>
+            </div>
+        </div>
+
+        <!-- Skin -->
+        <div class="section">
+            <h2>Skin</h2>
+            <div class="slider-group">
+                <label for="skinTone">Skin Tone:</label>
+                <input type="range" id="skinTone" min="0.03" max="1.2" step="0.01" value="1.00">
+                <span id="skinToneValue">0.75</span>
+            </div>
+        </div>
+
+        <!-- Bones -->
+        <div class="section">
+            <h2>Bone Sizes</h2>
+            <div class="sliders-container">
+                <div class="slider-group">
+                    <label for="headSize">Head Size:</label>
+                    <input type="range" id="headSize" min="0" max="2" step="0.01" value="1">
+                    <span id="headSizeValue">1.00</span>
+                </div>
+                <div class="slider-group">
+                    <label for="chestSize">Chest Size:</label>
+                    <input type="range" id="chestSize" min="0" max="2" step="0.01" value="1">
+                    <span id="chestSizeValue">1.00</span>
+                </div>
+                <div class="slider-group">
+                    <label for="handSize">Hand Size:</label>
+                    <input type="range" id="handSize" min="0" max="2" step="0.01" value="1">
+                    <span id="handSizeValue">1.00</span>
+                </div>
+                <div class="slider-group">
+                    <label for="abdomenSize">Abdomen Size:</label>
+                    <input type="range" id="abdomenSize" min="0" max="2" step="0.01" value="1">
+                    <span id="abdomenSizeValue">1.00</span>
+                </div>
+                <div class="slider-group">
+                    <label for="armSize">Arm Size:</label>
+                    <input type="range" id="armSize" min="0" max="2" step="0.01" value="1">
+                    <span id="armSizeValue">1.00</span>
+                </div>
+                <div class="slider-group">
+                    <label for="legSize">Leg Size:</label>
+                    <input type="range" id="legSize" min="0" max="2" step="0.01" value="1">
+                    <span id="legSizeValue">1.00</span>
+                </div>
+                <div class="slider-group">
+                    <label for="feetSize">Feet Size:</label>
+                    <input type="range" id="feetSize" min="0" max="2" step="0.01" value="1">
+                    <span id="feetSizeValue">1.00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hair Color -->
+        <div class="section">
+            <h2>Hair Color (RGB)</h2>
+            <div class="sliders-container">
+                <div class="slider-group">
+                    <label for="hairRed">Red:</label>
+                    <input type="range" id="hairRed" min="0" max="1" step="0.01" value="0.0">
+                    <span id="hairRedValue">0.50</span>
+                </div>
+                <div class="slider-group">
+                    <label for="hairGreen">Green:</label>
+                    <input type="range" id="hairGreen" min="0" max="1" step="0.01" value="0.0">
+                    <span id="hairGreenValue">0.50</span>
+                </div>
+                <div class="slider-group">
+                    <label for="hairBlue">Blue:</label>
+                    <input type="range" id="hairBlue" min="0" max="1" step="0.01" value="0.0">
+                    <span id="hairBlueValue">0.50</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Eyes -->
+        <div class="section">
+            <h2>Eyes</h2>
+            <div class="sliders-container">
+                <div class="slider-group">
+                    <label for="eyeColor">Eye Color:</label>
+                    <input type="range" id="eyeColor" min="0" max="1" step="0.01" value="0.5">
+                    <span id="eyeColorValue">0.50</span>
+                </div>
+                <div class="slider-group">
+                    <label for="eyeSaturation">Eye Saturation:</label>
+                    <input type="range" id="eyeSaturation" min="0" max="200" step="1" value="100">
+                    <span id="eyeSaturationValue">100</span>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Facial Expressions -->
+        <div class="section">
+            <h2>Facial Expressions</h2>
+            <div class="controls-grid">
+                <button onclick="sendCommand('FACE.Default')">Neutral</button>
+                <button onclick="sendCommand('FACE.Happy')">Happy</button>
+                <button onclick="sendCommand('FACE.Sad')">Sad</button>
+                <button onclick="sendCommand('FACE.Surprised')">Surprised</button>
+                <button onclick="sendCommand('FACE.Fearful')">Fearful</button>
+                <button onclick="sendCommand('FACE.Focused')">Focused</button>
+                <button onclick="sendCommand('FACE.Disgusted')">Disgusted</button>
+                <button onclick="sendCommand('FACE.Childish')">Childish</button>
+                <button onclick="sendCommand('FACE.Tired')">Tired</button>
+                <button onclick="sendCommand('FACE.Annoyed')">Annoyed</button>
+                <button onclick="sendCommand('FACE.Confused')">Confused</button>
+                <button onclick="sendCommand('FACE.Curious')">Curious</button>
+                <button onclick="sendCommand('FACE.Embarrassed')">Embarrassed</button>
+                <button onclick="sendCommand('FACE.Angry')">Angry</button>
+                <button onclick="sendCommand('FACE.Bored')">Bored</button>
+                <button onclick="sendCommand('FACE.Relaxed')">Relaxed</button>
+                <button onclick="sendCommand('FACE.Suspicious')">Suspicious</button>
+                <button onclick="sendCommand('FACE.Proud')">Proud</button>
+                <button onclick="sendCommand('FACE.Pained')">Pained</button>
+                <button onclick="sendCommand('FACE.Nervous')">Nervous</button>
+                <button onclick="sendCommand('FACE.Love')">Love</button>
+            </div>
+        </div>
+
+        <!-- Animations -->
+        <div class="section">
+            <h2>Animations</h2>
+            <div class="controls-grid">
+                <button onclick="sendCommand('ANIM.Dance')">Dance</button>
+                <button onclick="sendCommand('startspeaking')">Start Speaking</button>
+                <button onclick="sendCommand('stopspeaking')">Stop Speaking</button>
+                <button onclick="sendCommand('EMOTE.MiddleFinger')">Middle Finger</button>
+                <button onclick="sendCommand('EMOTE.TellingSecret')">Telling Secrets</button>
+            </div>
+        </div>
+
+        <!-- Level Controls -->
+        <div class="section">
+            <h2>Level Controls</h2>
+            <div class="controls-grid">
+                <button onclick="sendCommand('LVL.Home')">Default</button>
+                <button onclick="sendCommand('LVL.Lofi')">Lofi</button>
+                <button onclick="sendCommand('LVL.DJ')">DJ</button>
+                <button onclick="sendCommand('LVL.Medieval')">Medieval</button>
+                <button onclick="sendCommand('LVL.Orbit')">Orbit</button>
+                <button onclick="sendCommand('LVL.Split')">Split-Screen</button>
+                <button onclick="sendCommand('LVL.Split3')">Split-Triple</button>
+                <button onclick="sendCommand('LVL.Split4')">Split-Quad</button>
+            </div>
+        </div>
+
+        <!-- Game Controls -->
+        <div class="section">
+            <h2>Game Controls</h2>
+            <div class="controls-grid">
+                <button onclick="sendCommand('QUIT.')" class="danger">Quit Game</button>
+            </div>
+        </div>
+
+        <!-- Morph Targets (Collapsed by default) -->
+        <div class="section collapsible">
+            <h2 onclick="toggleSection('morphTargets')">Morph Targets <span id="morphTargetsToggle">▼</span></h2>
+            <div id="morphTargets" class="collapsible-content">
+                <!-- Head -->
+                <h3>Head</h3>
+                <div class="sliders-container">
+                    <div class="slider-group">
+                        <label for="headTop">Head Top:</label>
+                        <input type="range" id="headTop" min="-1" max="1" step="0.01" value="0">
+                        <span id="headTopValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="headSides">Head Sides:</label>
+                        <input type="range" id="headSides" min="-1" max="1" step="0.01" value="0">
+                        <span id="headSidesValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="headBack">Head Back:</label>
+                        <input type="range" id="headBack" min="-1" max="1" step="0.01" value="0">
+                        <span id="headBackValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="headBackWidth">Head Back Width:</label>
+                        <input type="range" id="headBackWidth" min="-1" max="1" step="0.01" value="0">
+                        <span id="headBackWidthValue">0.00</span>
+                    </div>
+                </div>
+
+                <!-- Neck -->
+                <h3>Neck</h3>
+                <div class="sliders-container">
+                    <div class="slider-group">
+                        <label for="neckFrontTop">Neck Front Top:</label>
+                        <input type="range" id="neckFrontTop" min="-1" max="1" step="0.01" value="0">
+                        <span id="neckFrontTopValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="neckFront">Neck Front:</label>
+                        <input type="range" id="neckFront" min="-1" max="1" step="0.01" value="0">
+                        <span id="neckFrontValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="neckSides">Neck Sides:</label>
+                        <input type="range" id="neckSides" min="-1" max="1" step="0.01" value="0">
+                        <span id="neckSidesValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="neckBackHigh">Neck Back High:</label>
+                        <input type="range" id="neckBackHigh" min="-1" max="1" step="0.01" value="0">
+                        <span id="neckBackHighValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="neckBackLow">Neck Back Low:</label>
+                        <input type="range" id="neckBackLow" min="-1" max="1" step="0.01" value="0">
+                        <span id="neckBackLowValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="neckDefinition">Neck Definition:</label>
+                        <input type="range" id="neckDefinition" min="-1" max="1" step="0.01" value="0">
+                        <span id="neckDefinitionValue">0.00</span>
+                    </div>
+                </div>
+
+                <!-- Ears -->
+                <h3>Ears</h3>
+                <div class="sliders-container">
+                    <div class="slider-group">
+                        <label for="earWidth">Ear Width:</label>
+                        <input type="range" id="earWidth" min="-1" max="1" step="0.01" value="0">
+                        <span id="earWidthValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="earPoint">Ear Point:</label>
+                        <input type="range" id="earPoint" min="-1" max="1" step="0.01" value="0">
+                        <span id="earPointValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="earlobe">Earlobe:</label>
+                        <input type="range" id="earlobe" min="-1" max="1" step="0.01" value="0">
+                        <span id="earlobeValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="earSize">Ear Size:</label>
+                        <input type="range" id="earSize" min="-1" max="1" step="0.01" value="0">
+                        <span id="earSizeValue">0.00</span>
+                    </div>
+                </div>
+
+                <!-- Forehead/Temples -->
+                <h3>Forehead/Temples</h3>
+                <div class="sliders-container">
+                    <div class="slider-group">
+                        <label for="foreheadCenter">Forehead Center:</label>
+                        <input type="range" id="foreheadCenter" min="-1" max="1" step="0.01" value="0">
+                        <span id="foreheadCenterValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="foreheadCurvature">Forehead Curvature:</label>
+                        <input type="range" id="foreheadCurvature" min="-1" max="1" step="0.01" value="0">
+                        <span id="foreheadCurvatureValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="foreheadSides">Forehead Sides:</label>
+                        <input type="range" id="foreheadSides" min="-1" max="1" step="0.01" value="0">
+                        <span id="foreheadSidesValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="temples">Temples:</label>
+                        <input type="range" id="temples" min="-1" max="1" step="0.01" value="0">
+                        <span id="templesValue">0.00</span>
+                    </div>
+                </div>
+
+                <!-- Eyebrows -->
+                <h3>Eyebrows</h3>
+                <div class="sliders-container">
+                    <div class="slider-group">
+                        <label for="eyebrowHeight">Eyebrow Height:</label>
+                        <input type="range" id="eyebrowHeight" min="-1" max="1" step="0.01" value="0">
+                        <span id="eyebrowHeightValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="eyebrowWidth">Eyebrow Width:</label>
+                        <input type="range" id="eyebrowWidth" min="-1" max="1" step="0.01" value="0">
+                        <span id="eyebrowWidthValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="eyebrowArch">Eyebrow Arch:</label>
+                        <input type="range" id="eyebrowArch" min="-1" max="1" step="0.01" value="0">
+                        <span id="eyebrowArchValue">0.00</span>
+                    </div>
+                </div>
+
+                <!-- Eyes -->
+                <h3>Eye Shape</h3>
+                <div class="sliders-container">
+                    <div class="slider-group">
+                        <label for="eyeCavity">Eye Cavity:</label>
+                        <input type="range" id="eyeCavity" min="-1" max="1" step="0.01" value="0">
+                        <span id="eyeCavityValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="eyeWidth">Eye Width:</label>
+                        <input type="range" id="eyeWidth" min="-1" max="1" step="0.01" value="0">
+                        <span id="eyeWidthValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="eyeBags">Eye Bags:</label>
+                        <input type="range" id="eyeBags" min="-1" max="1" step="0.01" value="0">
+                        <span id="eyeBagsValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="eyeHeight">Eye Height:</label>
+                        <input type="range" id="eyeHeight" min="-1" max="1" step="0.01" value="0">
+                        <span id="eyeHeightValue">0.00</span>
+                    </div>
+                </div>
+
+                <!-- Nose -->
+                <h3>Nose</h3>
+                <div class="sliders-container">
+                    <div class="slider-group">
+                        <label for="noseBase">Nose Base:</label>
+                        <input type="range" id="noseBase" min="-1" max="1" step="0.01" value="0">
+                        <span id="noseBaseValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="noseLength">Nose Length:</label>
+                        <input type="range" id="noseLength" min="-1" max="1" step="0.01" value="0">
+                        <span id="noseLengthValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="noseWidth">Nose Width:</label>
+                        <input type="range" id="noseWidth" min="-1" max="1" step="0.01" value="0">
+                        <span id="noseWidthValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="nostril">Nostril:</label>
+                        <input type="range" id="nostril" min="-1" max="1" step="0.01" value="0">
+                        <span id="nostrilValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="septum">Septum:</label>
+                        <input type="range" id="septum" min="-1" max="1" step="0.01" value="0">
+                        <span id="septumValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="noseCrookedness">Nose Crookedness:</label>
+                        <input type="range" id="noseCrookedness" min="-1" max="1" step="0.01" value="0">
+                        <span id="noseCrookednessValue">0.00</span>
+                    </div>
+                </div>
+
+                <!-- Cheeks -->
+                <h3>Cheeks</h3>
+                <div class="sliders-container">
+                    <div class="slider-group">
+                        <label for="cheekBone">Cheek Bone:</label>
+                        <input type="range" id="cheekBone" min="-1" max="1" step="0.01" value="0">
+                        <span id="cheekBoneValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="cheekTissue">Cheek Tissue:</label>
+                        <input type="range" id="cheekTissue" min="-1" max="1" step="0.01" value="0">
+                        <span id="cheekTissueValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="cheekDefinition">Cheek Definition:</label>
+                        <input type="range" id="cheekDefinition" min="-1" max="1" step="0.01" value="0">
+                        <span id="cheekDefinitionValue">0.00</span>
+                    </div>
+                </div>
+
+                <!-- Lips -->
+                <h3>Lips</h3>
+                <div class="sliders-container">
+                    <div class="slider-group">
+                        <label for="lipsOuter">Lips Outer:</label>
+                        <input type="range" id="lipsOuter" min="-1" max="1" step="0.01" value="0">
+                        <span id="lipsOuterValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="lipsWidth">Lips Width:</label>
+                        <input type="range" id="lipsWidth" min="-1" max="1" step="0.01" value="0">
+                        <span id="lipsWidthValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="lipsOverlap">Lips Overlap:</label>
+                        <input type="range" id="lipsOverlap" min="-1" max="1" step="0.01" value="0">
+                        <span id="lipsOverlapValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="lipsCurve">Lips Curve:</label>
+                        <input type="range" id="lipsCurve" min="-1" max="1" step="0.01" value="0">
+                        <span id="lipsCurveValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="lipsDepth">Lips Depth:</label>
+                        <input type="range" id="lipsDepth" min="-1" max="1" step="0.01" value="0">
+                        <span id="lipsDepthValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="lipsUnderlap">Lips Underlap:</label>
+                        <input type="range" id="lipsUnderlap" min="-1" max="1" step="0.01" value="0">
+                        <span id="lipsUnderlapValue">0.00</span>
+                    </div>
+                </div>
+
+                <!-- Chin/Jaw -->
+                <h3>Chin/Jaw</h3>
+                <div class="sliders-container">
+                    <div class="slider-group">
+                        <label for="chinLength">Chin Length:</label>
+                        <input type="range" id="chinLength" min="-1" max="1" step="0.01" value="0">
+                        <span id="chinLengthValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="chinPoint">Chin Point:</label>
+                        <input type="range" id="chinPoint" min="-1" max="1" step="0.01" value="0">
+                        <span id="chinPointValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="chinWidth">Chin Width:</label>
+                        <input type="range" id="chinWidth" min="-1" max="1" step="0.01" value="0">
+                        <span id="chinWidthValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="jawLower">Jaw Lower:</label>
+                        <input type="range" id="jawLower" min="-1" max="1" step="0.01" value="0">
+                        <span id="jawLowerValue">0.00</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="jawHigher">Jaw Higher:</label>
+                        <input type="range" id="jawHigher" min="-1" max="1" step="0.01" value="0">
+                        <span id="jawHigherValue">0.00</span>
+                    </div>
+                </div>
+
+                <!-- Other -->
+                <h3>Other</h3>
+                <div class="sliders-container">
+                    <div class="slider-group">
+                        <label for="horns">Horns:</label>
+                        <input type="range" id="horns" min="-1" max="1" step="0.01" value="0">
+                        <span id="hornsValue">0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="controller.js"></script>
+</body>
+</html>

@@ -1,9 +1,10 @@
 import socket
 
-HOST = "127.0.0.1"
-PORT = 7777
+DEFAULT_HOST = input("Enter target IP (default 127.0.0.1): ").strip() or "127.0.0.1"
+DEFAULT_PORT = 7777
 
-print("🧠 Type a word and press Enter to send it to Unreal (type 'exit' to quit)")
+print(f"🧠 Connecting to {DEFAULT_HOST}:{DEFAULT_PORT}")
+print("Type a word and press Enter to send it to Unreal (type 'exit' to quit)")
 
 while True:
     word = input("→ Your Word: ").strip()
@@ -17,8 +18,8 @@ while True:
 
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((HOST, PORT))
+            s.connect((DEFAULT_HOST, DEFAULT_PORT))
             s.sendall((word + "\n").encode('utf-8'))
             print(f"✅ Sent: {word}")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"❌ Connection Error: {e}")
