@@ -62,61 +62,19 @@ Ensure your Embody application is running and listening on TCP port 7777.
 
 You can find the download here: 
 
-### 2. Basic Command Line Usage
+### 2. Launch Bridge Server
 ```bash
-# Simple text commands to Embody
-python tcp_test_client.py
-# Enter target IP (default: 127.0.0.1)
-# Type commands like: PRS.Fem, OF.Kimono, FACE.Happy
+# Start the HTTP-to-TCP bridge
+python http_tcp_bridge.py
+# Bridge runs on http://127.0.0.1:7777
 ```
 
 ### 3. Web Interface Setup
 ```bash
-# Start the HTTP-to-TCP bridge
-python http_tcp_bridge.py
-# Bridge runs on http://127.0.0.1:8080
-
-# Open tcp_controller.html in your browser
+# Open TCP controller in your browser
+tcp_controller.html
 # Connect to bridge and start controlling!
 ```
-
-### 4. Character Randomization
-```bash
-# Generate random characters
-python chargen.py
-# Press ENTER to randomize preset, outfit, and hair
-```
-
-## 🎛️ Control Commands
-
-### Character Presets
-- `PRS.Fem` / `PRS.Fem1` - Feminine presets
-- `PRS.Masc` / `PRS.Masc1` - Masculine presets
-
-### Outfits
-- `OF.Default` - Default outfit
-- `OF.MaidDress` - Maid dress
-- `OF.PopStar` - Pop star outfit
-- `OF.Kimono` - Traditional kimono
-- `OF.BlackDress` - Black dress
-- `OF.SpaceSuit` - Space suit
-- `OF.ANIME` - Anime armor
-
-### Camera Control
-- `CAMSHOT.Default` - Default camera
-- `CAMSHOT.Close` / `CAMSHOT.ExtremeClose` - Close-up shots
-- `CAMSHOT.WideShot` - Wide angle view
-- `CAMSHOT.HighAngle` / `CAMSHOT.LowAngle` - Angled shots
-
-### Facial Expressions
-- `FACE.Happy` / `FACE.Sad` / `FACE.Angry`
-- `FACE.Surprised` / `FACE.Fearful` / `FACE.Disgusted`
-- `FACE.Love` / `FACE.Embarrassed` / `FACE.Confused`
-
-### Animations
-- `ANIM.Dance` - Dance animation
-- `startspeaking` / `stopspeaking` - Speech animations
-- `EMOTE.MiddleFinger` / `EMOTE.TellingSecret` - Gesture emotes
 
 ## 🌐 Web Interface Features
 
