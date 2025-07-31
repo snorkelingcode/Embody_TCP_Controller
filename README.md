@@ -104,7 +104,7 @@ The web controller (`tcp_controller.html`) provides:
 - **Content Creation**: Streamlined character setup for video/streaming
 - **Game Development**: Rapid prototyping of character variations
 - **Interactive Experiences**: Real-time character control for performances
-- **Animation**: Keyframe setup and scene composition
+- **Animation**: Animate story boards with Metahumans in minutes
 - **Education**: Learning character modeling and animation concepts
 
 ## 📋 Requirements
