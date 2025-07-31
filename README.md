@@ -61,6 +61,7 @@ TCP_Test_Script/
 Ensure your Embody application is running and listening on TCP port 7777.
 
 You can find the download here: https://drive.google.com/file/d/1skgExWRqsK-m3FLZbcuqAYrp8L9xZcAV/view?usp=sharing
+Currently only built for Windows. Linux coming soon.
 
 ### 2. Launch Bridge Server
 ```bash
